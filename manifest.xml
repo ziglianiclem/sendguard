@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SendGuard (nouvel Outlook). https://ziglianiclem.github.io/sendguard = URL HTTPS d'hebergement, remplacee par build-sendguard-web.ps1.
+     Pas de <Override type="javascript"> : l'Outlook classique n'execute pas l'evenement (la version COM
+     y fait le travail ; sinon double alerte, le complement suivant la boite aux lettres partout). -->
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
+           xsi:type="MailApp">
+  <Id>d68da1e8-38bc-4e1e-a999-b482bbafd3c9</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Clement Zigliani</ProviderName>
+  <DefaultLocale>fr-FR</DefaultLocale>
+  <DisplayName DefaultValue="SendGuard"/>
+  <Description DefaultValue="Confirmation des destinataires externes et de l'objet avant envoi."/>
+  <IconUrl DefaultValue="https://ziglianiclem.github.io/sendguard/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://ziglianiclem.github.io/sendguard/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://ziglianiclem.github.io/sendguard/taskpane.html"/>
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.1"/>
+    </Sets>
+  </Requirements>
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://ziglianiclem.github.io/sendguard/taskpane.html"/>
+        <RequestedHeight>250</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+  <Permissions>ReadWriteItem</Permissions>
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.14">
+          <bt:Set Name="Mailbox"/>
+        </bt:Sets>
+      </Requirements>
+      <Hosts>
+        <Host xsi:type="MailHost">
+          <Runtimes>
+            <Runtime resid="Commands.Url"/>
+          </Runtimes>
+          <DesktopFormFactor>
+            <FunctionFile resid="Commands.Url"/>
+            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="sgGroup">
+                  <Label resid="Group.Label"/>
+                  <Control xsi:type="Button" id="sgTaskpane">
+                    <Label resid="Button.Label"/>
+                    <Supertip>
+                      <Title resid="Button.Label"/>
+                      <Description resid="Button.Tip"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon.16"/>
+                      <bt:Image size="32" resid="Icon.32"/>
+                      <bt:Image size="80" resid="Icon.80"/>
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="Taskpane.Url"/>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+            <ExtensionPoint xsi:type="LaunchEvent">
+              <LaunchEvents>
+                <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="PromptUser"/>
+              </LaunchEvents>
+              <SourceLocation resid="Commands.Url"/>
+            </ExtensionPoint>
+          </DesktopFormFactor>
+        </Host>
+      </Hosts>
+      <Resources>
+        <bt:Images>
+          <bt:Image id="Icon.16" DefaultValue="https://ziglianiclem.github.io/sendguard/assets/icon-16.png"/>
+          <bt:Image id="Icon.32" DefaultValue="https://ziglianiclem.github.io/sendguard/assets/icon-32.png"/>
+          <bt:Image id="Icon.80" DefaultValue="https://ziglianiclem.github.io/sendguard/assets/icon-80.png"/>
+        </bt:Images>
+        <bt:Urls>
+          <bt:Url id="Commands.Url" DefaultValue="https://ziglianiclem.github.io/sendguard/commands.html"/>
+          <bt:Url id="Taskpane.Url" DefaultValue="https://ziglianiclem.github.io/sendguard/taskpane.html"/>
+        </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="Group.Label" DefaultValue="SendGuard"/>
+          <bt:String id="Button.Label" DefaultValue="Vérifier l'envoi"/>
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="Button.Tip" DefaultValue="Destinataires externes et objet du mail, modifiable avant l'envoi."/>
+        </bt:LongStrings>
+      </Resources>
+    </VersionOverrides>
+  </VersionOverrides>
+</OfficeApp>
